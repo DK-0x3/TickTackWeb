@@ -1,0 +1,29 @@
+.page {
+  display: grid;
+  flex: 1 1 auto;
+  place-items: center;
+  width: 100%;
+  min-height: 0;
+  padding: var(--space-6);
+  background: var(--color-background);
+}
+
+.card {
+  text-align: center;
+}
+
+.code {
+  margin: 0;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.1em;
+}
+
+.title {
+  margin: var(--space-2) 0 var(--space-6);
+  color: var(--color-text-primary);
+}
+
+.link {
+  font-weight: var(--font-weight-semibold);
+}

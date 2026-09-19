@@ -1,0 +1,43 @@
+{
+  "navigation": {
+    "primaryLabel": "Основная навигация",
+    "inbox": "Входящие",
+    "today": "Сегодня",
+    "tags": "Теги",
+    "settings": "Настройки"
+  },
+  "header": {
+    "searchPlaceholder": "Поиск задач или тегов...",
+    "searchLabel": "Поиск задач или тегов"
+  },
+  "theme": {
+    "useLight": "Включить светлую тему",
+    "useDark": "Включить тёмную тему"
+  },
+  "pages": {
+    "inbox": {
+      "title": "Входящие"
+    },
+    "today": {
+      "title": "Сегодня"
+    },
+    "tags": {
+      "title": "Теги"
+    },
+    "settings": {
+      "title": "Настройки",
+      "description": "Настройте параметры приложения."
+    },
+    "notFound": {
+      "title": "Страница не найдена",
+      "returnToInbox": "Вернуться во Входящие"
+    }
+  },
+  "language": {
+    "selectorLabel": "Изменить язык. Текущий язык: {{language}}",
+    "optionsLabel": "Доступные языки",
+    "english": "Английский",
+    "russian": "Русский",
+    "chineseSimplified": "Китайский (упрощённый)"
+  }
+}

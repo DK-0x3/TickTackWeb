@@ -1,0 +1,12 @@
+import { Icon } from '../Icon';
+
+import type { IconProps } from '../icon.types';
+
+export function SearchIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="m21 21-4.34-4.34" />
+      <circle cx="11" cy="11" r="8" />
+    </Icon>
+  );
+}

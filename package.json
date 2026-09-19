@@ -1,0 +1,57 @@
+{
+  "name": "tick-tack-web",
+  "version": "0.1.0",
+  "description": "Web client for Tick Tack",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "typecheck": "tsc -b --pretty false",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DK-0x3/TickTackWeb.git"
+  },
+  "keywords": [
+    "productivity",
+    "tasks",
+    "react"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/DK-0x3/TickTackWeb/issues"
+  },
+  "homepage": "https://github.com/DK-0x3/TickTackWeb#readme",
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.12.0",
+    "clsx": "^2.1.1",
+    "i18next": "^26.4.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-i18next": "^17.0.14",
+    "react-redux": "^9.3.0",
+    "react-router-dom": "^7.18.4",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/node": "^26.6.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^10.11.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.12.0",
+    "sass": "^1.104.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.70.0",
+    "vite": "^8.3.0"
+  }
+}

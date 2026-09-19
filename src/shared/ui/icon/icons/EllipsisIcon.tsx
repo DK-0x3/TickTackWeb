@@ -1,0 +1,13 @@
+import { Icon } from '../Icon';
+
+import type { IconProps } from '../icon.types';
+
+export function EllipsisIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="1" />
+      <circle cx="19" cy="12" r="1" />
+      <circle cx="5" cy="12" r="1" />
+    </Icon>
+  );
+}

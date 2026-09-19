@@ -1,0 +1,43 @@
+{
+  "navigation": {
+    "primaryLabel": "主导航",
+    "inbox": "收件箱",
+    "today": "今天",
+    "tags": "标签",
+    "settings": "设置"
+  },
+  "header": {
+    "searchPlaceholder": "搜索任务或标签……",
+    "searchLabel": "搜索任务或标签"
+  },
+  "theme": {
+    "useLight": "使用浅色主题",
+    "useDark": "使用深色主题"
+  },
+  "pages": {
+    "inbox": {
+      "title": "收件箱"
+    },
+    "today": {
+      "title": "今天"
+    },
+    "tags": {
+      "title": "标签"
+    },
+    "settings": {
+      "title": "设置",
+      "description": "配置应用程序偏好设置。"
+    },
+    "notFound": {
+      "title": "未找到页面",
+      "returnToInbox": "返回收件箱"
+    }
+  },
+  "language": {
+    "selectorLabel": "更改语言。当前语言：{{language}}",
+    "optionsLabel": "可用语言",
+    "english": "英语",
+    "russian": "俄语",
+    "chineseSimplified": "简体中文"
+  }
+}

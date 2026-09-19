@@ -1,0 +1,43 @@
+{
+  "navigation": {
+    "primaryLabel": "Primary navigation",
+    "inbox": "Inbox",
+    "today": "Today",
+    "tags": "Tags",
+    "settings": "Settings"
+  },
+  "header": {
+    "searchPlaceholder": "Search tasks or tags...",
+    "searchLabel": "Search tasks or tags"
+  },
+  "theme": {
+    "useLight": "Use light theme",
+    "useDark": "Use dark theme"
+  },
+  "pages": {
+    "inbox": {
+      "title": "Inbox"
+    },
+    "today": {
+      "title": "Today"
+    },
+    "tags": {
+      "title": "Tags"
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Configure your application preferences."
+    },
+    "notFound": {
+      "title": "Page not found",
+      "returnToInbox": "Return to Inbox"
+    }
+  },
+  "language": {
+    "selectorLabel": "Change language. Current language: {{language}}",
+    "optionsLabel": "Available languages",
+    "english": "English",
+    "russian": "Russian",
+    "chineseSimplified": "Chinese (Simplified)"
+  }
+}
