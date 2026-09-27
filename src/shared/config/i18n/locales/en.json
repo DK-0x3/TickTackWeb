@@ -16,7 +16,14 @@
   },
   "pages": {
     "inbox": {
-      "title": "Inbox"
+      "title": "Inbox",
+      "tasks": "Tasks",
+      "overview": {
+        "title": "Overview",
+        "total": "Total tasks",
+        "completed": "Completed",
+        "remaining": "Remaining"
+      }
     },
     "today": {
       "title": "Today"
@@ -39,5 +46,63 @@
     "english": "English",
     "russian": "Russian",
     "chineseSimplified": "Chinese (Simplified)"
+  },
+  "tasks": {
+    "list": {
+      "add": "Add task",
+      "settings": "List settings",
+      "completed": "{{completed}} of {{total}} tasks completed",
+      "totalCount": "Total tasks: {{count}}",
+      "progressLabel": "Completion progress of all tasks",
+      "completionLabel": "Change status of task “{{title}}”",
+      "taskActions": "Actions for task “{{title}}”",
+      "emptyTitle": "No tasks in Inbox yet",
+      "emptyDescription": "Add your first task to start planning.",
+      "errorTitle": "Tasks could not be loaded",
+      "errorDescription": "Check your connection and try again.",
+      "loadingMore": "Loading tasks...",
+      "retry": "Try again"
+    },
+    "create": {
+      "label": "Task title",
+      "placeholder": "What needs to be done?",
+      "submit": "Add task",
+      "cancel": "Cancel"
+    },
+    "delete": {
+      "action": "Delete task",
+      "deleting": "Deleting task “{{title}}”...",
+      "notice": "Task “{{title}}” deleted",
+      "undo": "Undo",
+      "undoing": "Restoring..."
+    },
+    "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    }
+  },
+  "errors": {
+    "network": "Could not connect to the server.",
+    "timeout": "The server is taking too long to respond.",
+    "invalidResponse": "The server returned an invalid response.",
+    "invalidRequest": "The request contains invalid data.",
+    "validation": "Check the entered data.",
+    "taskNotFound": "The task was not found or has been deleted.",
+    "unauthorized": "You need to sign in.",
+    "forbidden": "You do not have permission for this action.",
+    "notFound": "The requested data was not found.",
+    "conflict": "The data has changed. Refresh and try again.",
+    "server": "A server error occurred. Try again later.",
+    "loadTasks": "Tasks could not be loaded.",
+    "createTask": "The task could not be created.",
+    "updateTask": "The task could not be updated.",
+    "deleteTask": "The task could not be deleted.",
+    "restoreTask": "The task could not be restored.",
+    "taskDeletionUnconfirmed": "Could not confirm whether the task was deleted. Check again when connected.",
+    "taskRestorationUnconfirmed": "Could not confirm whether the task was restored. Check again when connected.",
+    "taskStatusUnconfirmed": "Could not confirm whether the task was updated. Check again when connected.",
+    "generic": "Something went wrong.",
+    "dismiss": "Dismiss error message"
   }
 }

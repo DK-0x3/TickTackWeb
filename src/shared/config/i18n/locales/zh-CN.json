@@ -16,7 +16,14 @@
   },
   "pages": {
     "inbox": {
-      "title": "收件箱"
+      "title": "收件箱",
+      "tasks": "任务",
+      "overview": {
+        "title": "概览",
+        "total": "任务总数",
+        "completed": "已完成",
+        "remaining": "未完成"
+      }
     },
     "today": {
       "title": "今天"
@@ -39,5 +46,63 @@
     "english": "英语",
     "russian": "俄语",
     "chineseSimplified": "简体中文"
+  },
+  "tasks": {
+    "list": {
+      "add": "添加任务",
+      "settings": "列表设置",
+      "completed": "已完成 {{completed}} / {{total}} 项任务",
+      "totalCount": "任务总数：{{count}}",
+      "progressLabel": "所有任务的完成进度",
+      "completionLabel": "更改任务“{{title}}”的状态",
+      "taskActions": "任务“{{title}}”的操作",
+      "emptyTitle": "收件箱中还没有任务",
+      "emptyDescription": "添加第一个任务，开始规划。",
+      "errorTitle": "无法加载任务",
+      "errorDescription": "请检查连接，然后重试。",
+      "loadingMore": "正在加载任务...",
+      "retry": "重试"
+    },
+    "create": {
+      "label": "任务标题",
+      "placeholder": "需要做什么？",
+      "submit": "添加任务",
+      "cancel": "取消"
+    },
+    "delete": {
+      "action": "删除任务",
+      "deleting": "正在删除任务“{{title}}”...",
+      "notice": "任务“{{title}}”已删除",
+      "undo": "撤销",
+      "undoing": "正在恢复..."
+    },
+    "priority": {
+      "low": "低",
+      "medium": "中",
+      "high": "高"
+    }
+  },
+  "errors": {
+    "network": "无法连接到服务器。",
+    "timeout": "服务器响应时间过长。",
+    "invalidResponse": "服务器返回了无效响应。",
+    "invalidRequest": "请求包含无效数据。",
+    "validation": "请检查输入的数据。",
+    "taskNotFound": "任务不存在或已被删除。",
+    "unauthorized": "请先登录。",
+    "forbidden": "您没有执行此操作的权限。",
+    "notFound": "未找到请求的数据。",
+    "conflict": "数据已更改，请刷新后重试。",
+    "server": "服务器发生错误，请稍后重试。",
+    "loadTasks": "无法加载任务。",
+    "createTask": "无法创建任务。",
+    "updateTask": "无法更新任务。",
+    "deleteTask": "无法删除任务。",
+    "restoreTask": "无法恢复任务。",
+    "taskDeletionUnconfirmed": "无法确认任务是否已删除。连接恢复后请再次检查。",
+    "taskRestorationUnconfirmed": "无法确认任务是否已恢复。连接恢复后请再次检查。",
+    "taskStatusUnconfirmed": "无法确认任务是否已更新。连接恢复后请再次检查。",
+    "generic": "出现错误。",
+    "dismiss": "关闭错误消息"
   }
 }

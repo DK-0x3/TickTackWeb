@@ -61,8 +61,13 @@ export default defineConfig([
         'error',
         { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
       ],
-      'curly': ['error', 'all'],
+      'curly': ['error', 'multi-line'],
       'eqeqeq': ['error', 'always'],
+    },
+  },
+  {
+    rules: {
+      '@stylistic/max-statements-per-line': 'off',
     },
   },
 ]);

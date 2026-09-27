@@ -21,10 +21,11 @@ the operating-system preference, and an explicit choice is persisted locally.
 npm install
 npm run dev
 npm run typecheck
+npm test
 npm run lint
 npm run build
 ```
 
 During development, requests under `/api` are proxied to
-`http://localhost:8080`. The prefix is removed before the request reaches the
+`http://localhost:8887`. The prefix is removed before the request reaches the
 backend, so `/api/health` is forwarded as `/health`.
