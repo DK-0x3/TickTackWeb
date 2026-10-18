@@ -1,0 +1,108 @@
+.content {
+  z-index: 20;
+  width: 20rem;
+  max-width: calc(100vw - 1.5rem);
+  max-height: var(--radix-popover-content-available-height);
+  overflow: auto;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  background: var(--color-surface-elevated);
+  box-shadow: var(--shadow-md);
+}
+
+.calendar.calendar {
+  --rdp-accent-color: var(--color-primary);
+  --rdp-accent-background-color: var(--color-primary-soft);
+  --rdp-day-height: 2.5rem;
+  --rdp-day-width: 2.375rem;
+  --rdp-day_button-height: 2.25rem;
+  --rdp-day_button-width: 2.25rem;
+  --rdp-selected-border: 0;
+
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.calendarLoading {
+  width: 16.625rem;
+  height: 17rem;
+}
+
+.calendar :global(.rdp-month_caption) {
+  align-items: center;
+  font-size: var(--font-size-md);
+}
+
+.calendar :global(.rdp-dropdowns) {
+  gap: var(--space-1);
+  padding-right: 4.5rem;
+}
+
+.calendar :global(.rdp-weekday) {
+  color: var(--color-text-muted);
+}
+
+.calendar :global(.rdp-selected) {
+  font-size: inherit;
+  font-weight: var(--font-weight-semibold);
+}
+
+.calendar :global(.rdp-day_button:hover:not(:disabled)) {
+  background: var(--color-surface-hover);
+}
+
+.calendar :global(.rdp-selected .rdp-day_button) {
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
+}
+
+.calendar :global(.rdp-selected .rdp-day_button:hover:not(:disabled)) {
+  background: var(--color-primary-hover);
+}
+
+.timeRow {
+  padding-block: var(--space-3);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.actions button {
+  min-height: 2.25rem;
+  padding: var(--space-1) var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-size: var(--font-size-sm);
+
+  &:hover:not(:disabled) {
+    background: var(--color-surface-hover);
+  }
+}
+
+.clearDate {
+  color: var(--color-text-secondary);
+  margin-right: auto;
+}
+
+.cancel {
+  color: var(--color-text-secondary);
+}
+
+.actions .save {
+  padding-inline: var(--space-3);
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+  }
+}

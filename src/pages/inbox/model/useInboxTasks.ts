@@ -1,11 +1,14 @@
 import {
+  type CreateTaskInput,
   type Task,
+  type TaskScheduleInput,
   useCreateTaskMutation,
   useDeleteTaskMutation,
   useGetTasksInfiniteQuery,
   useLazyGetTaskQuery,
   useRestoreTaskMutation,
   useSetTaskCompletedMutation,
+  useSetTaskScheduleMutation,
 } from '@/entities/task';
 import { normalizeApiError, useApiErrorMessage } from '@/shared/api';
 import { useNotifications, type NotificationAction } from '@/shared/lib/notifications';
@@ -38,6 +41,7 @@ export const useInboxTasks = () => {
     fallback: 'errors.updateTask' | 'errors.deleteTask';
   } | null>(null);
   const [isTaskStatusUnconfirmed, setIsTaskStatusUnconfirmed] = useState(false);
+  const [isTaskScheduleUnconfirmed, setIsTaskScheduleUnconfirmed] = useState(false);
   const [isTaskDeletionUnconfirmed, setIsTaskDeletionUnconfirmed] = useState(false);
   const [hiddenTasks, setHiddenTasks] = useState(() => new Map<string, HiddenTask>());
   const [loadMoreError, setLoadMoreError] = useState<unknown>(null);
@@ -80,6 +84,7 @@ export const useInboxTasks = () => {
   }] = useCreateTaskMutation();
 
   const [triggerSetCompleted] = useSetTaskCompletedMutation();
+  const [triggerSetSchedule] = useSetTaskScheduleMutation();
   const [deleteTask] = useDeleteTaskMutation();
   const [restoreTask] = useRestoreTaskMutation();
   const [fetchTask] = useLazyGetTaskQuery();
@@ -96,11 +101,11 @@ export const useInboxTasks = () => {
     }
   };
 
-  const handleCreateTask = async (title: string): Promise<boolean> => {
+  const handleCreateTask = async (input: CreateTaskInput): Promise<boolean> => {
     resetCreateTask();
 
     try {
-      await triggerCreateTask({ title }).unwrap();
+      await triggerCreateTask(input).unwrap();
       setLoadMoreError(null);
       return true;
     } catch {
@@ -118,11 +123,11 @@ export const useInboxTasks = () => {
     updatingTaskIdsInFlight.current.add(task.id);
     setTaskActionError(null);
     setIsTaskStatusUnconfirmed(false);
+    setIsTaskScheduleUnconfirmed(false);
     setIsTaskDeletionUnconfirmed(false);
     setUpdatingTaskIds((current) => {
       const next = new Set(current);
       next.add(task.id);
-
       return next;
     });
 
@@ -164,6 +169,48 @@ export const useInboxTasks = () => {
     }
   };
 
+  const handleSetSchedule = async (task: Task, schedule: TaskScheduleInput): Promise<boolean> => {
+    if (updatingTaskIdsInFlight.current.has(task.id)
+      || deletingTaskIdsInFlight.current.has(task.id)
+      || isTaskHidden(task, hiddenTasks)) return false;
+
+    updatingTaskIdsInFlight.current.add(task.id);
+    setTaskActionError(null);
+    setIsTaskStatusUnconfirmed(false);
+    setIsTaskScheduleUnconfirmed(false);
+    setIsTaskDeletionUnconfirmed(false);
+    setUpdatingTaskIds((current) => new Set(current).add(task.id));
+
+    try {
+      await triggerSetSchedule({ id: task.id, ...schedule }).unwrap();
+      setLoadMoreError(null);
+      return true;
+    } catch (error) {
+      try {
+        const refreshed = await refetch().unwrap();
+        const currentTask = refreshed.pages
+          .flatMap(({ items }) => items)
+          .find(({ id }) => id === task.id);
+
+        if (currentTask?.dueDate === schedule.dueDate
+          && currentTask.dueTime === schedule.dueTime) return true;
+
+        setTaskActionError({ error, fallback: 'errors.updateTask' });
+        return false;
+      } catch {
+        setIsTaskScheduleUnconfirmed(true);
+        return false;
+      }
+    } finally {
+      updatingTaskIdsInFlight.current.delete(task.id);
+      setUpdatingTaskIds((current) => {
+        const next = new Set(current);
+        next.delete(task.id);
+        return next;
+      });
+    }
+  };
+
   const handleDeleteTask = async (task: Task): Promise<void> => {
     if (deletingTaskIdsInFlight.current.has(task.id)
       || updatingTaskIdsInFlight.current.has(task.id)
@@ -176,6 +223,7 @@ export const useInboxTasks = () => {
     }));
     setTaskActionError(null);
     setIsTaskStatusUnconfirmed(false);
+    setIsTaskScheduleUnconfirmed(false);
     setIsTaskDeletionUnconfirmed(false);
 
     const noticeId = notifications.show({
@@ -297,11 +345,13 @@ export const useInboxTasks = () => {
   return {
     actionErrorMessage: isTaskDeletionUnconfirmed
       ? t('errors.taskDeletionUnconfirmed')
-      : isTaskStatusUnconfirmed
-        ? t('errors.taskStatusUnconfirmed')
-        : taskActionError
-          ? getErrorMessage(taskActionError.error, taskActionError.fallback)
-          : null,
+      : isTaskScheduleUnconfirmed
+        ? t('errors.taskScheduleUnconfirmed')
+        : isTaskStatusUnconfirmed
+          ? t('errors.taskStatusUnconfirmed')
+          : taskActionError
+            ? getErrorMessage(taskActionError.error, taskActionError.fallback)
+            : null,
     createErrorMessage: getErrorMessage(createError, 'errors.createTask'),
     completedCount: latestPage?.completedTotal ?? 0,
     isCreating,
@@ -317,12 +367,14 @@ export const useInboxTasks = () => {
     onDismissActionError: () => {
       setTaskActionError(null);
       setIsTaskStatusUnconfirmed(false);
+      setIsTaskScheduleUnconfirmed(false);
       setIsTaskDeletionUnconfirmed(false);
     },
     onLoadMore: handleLoadMore,
     onResetCreateError: resetCreateTask,
     onRetry: handleRetry,
     onToggleCompleted: handleToggleCompleted,
+    onSetSchedule: handleSetSchedule,
     onDeleteTask: handleDeleteTask,
   };
 };

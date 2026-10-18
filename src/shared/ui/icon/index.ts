@@ -1,5 +1,7 @@
 export { Icon } from './Icon';
 export { ICON_SIZES } from './icon.constants';
+export { AlertCircleIcon } from './icons/AlertCircleIcon';
+export { RefreshIcon } from './icons/RefreshIcon';
 export { CalendarIcon } from './icons/CalendarIcon';
 export { CheckIcon } from './icons/CheckIcon';
 export { CommandIcon } from './icons/CommandIcon';

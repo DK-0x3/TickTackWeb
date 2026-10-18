@@ -1,58 +1,58 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { Task } from '@/entities/task';
-import { CheckIcon, EllipsisIcon } from '@/shared/ui/icon';
+import { formatTaskDueDate, TaskSchedulePicker, type Task, type TaskScheduleInput } from '@/entities/task';
+import {
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuRoot,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from '@/shared/ui/context-menu';
+import { CalendarIcon, CheckIcon, TrashIcon } from '@/shared/ui/icon';
 
 import styles from './TaskListWidget.module.scss';
 
 interface TaskItemProps {
   isUpdating: boolean;
   task: Task;
+  today: Date;
   onDeleteTask?: (task: Task) => void;
+  onSetSchedule?: (task: Task, schedule: TaskScheduleInput) => Promise<boolean>;
   onToggleCompleted: (task: Task) => void;
 }
 
 export function TaskItem({
   isUpdating,
   task,
+  today,
   onDeleteTask,
+  onSetSchedule,
   onToggleCompleted,
 }: TaskItemProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isCompleted = task.completedAt !== null;
-  const [isActionsOpen, setIsActionsOpen] = useState(false);
-  const actionsRef = useRef<HTMLDetailsElement>(null);
-  const triggerRef = useRef<HTMLElement>(null);
+  const hasMenuActions = Boolean(onSetSchedule ?? onDeleteTask);
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
+  const rowRef = useRef<HTMLLIElement>(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+  const scheduleAnchorRef = useRef<{
+    getBoundingClientRect: () => DOMRect;
+    contextElement?: Element;
+  } | null>(null);
+  const [scheduleSource, setScheduleSource] = useState<'date' | 'menu'>('date');
+  const focusReturnRef = useRef<HTMLElement | null>(null);
+  const openScheduleAfterMenuClosesRef = useRef(false);
+  const dateLabel = task.dueDate
+    ? formatTaskDueDate(task.dueDate, i18n.language, {
+        today: t('tasks.schedule.today'),
+        tomorrow: t('tasks.schedule.tomorrow'),
+      }, today)
+    : null;
+  const scheduleLabel = dateLabel ? [dateLabel, task.dueTime].filter(Boolean).join(' · ') : '';
 
-  useEffect(() => {
-    if (!isActionsOpen) return undefined;
-
-    const handlePointerDown = (event: PointerEvent) => {
-      if (event.target instanceof Node && !actionsRef.current?.contains(event.target)) {
-        if (actionsRef.current) actionsRef.current.open = false;
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape' || !actionsRef.current?.open) return;
-
-      event.preventDefault();
-      const focusIsInside = actionsRef.current.contains(document.activeElement);
-      actionsRef.current.open = false;
-      if (focusIsInside) triggerRef.current?.focus();
-    };
-
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isActionsOpen]);
-
-  return (
-    <li className={styles.taskItem}>
+  const row = (
+    <li ref={rowRef} className={styles.taskItem} tabIndex={hasMenuActions ? 0 : undefined}>
       <button
         className={styles.checkbox}
         type="button"
@@ -65,50 +65,118 @@ export function TaskItem({
         {isCompleted ? <CheckIcon /> : null}
       </button>
 
-      <span
-        className={`${styles.taskTitle} ${isCompleted ? styles.completedTitle : ''}`}
-      >
-        {task.title}
-      </span>
+      <div className={styles.taskMain}>
+        <span className={`${styles.taskTitle} ${isCompleted ? styles.completedTitle : ''}`}>
+          {task.title}
+        </span>
+      </div>
 
-      {task.priority !== 'none'
+      {(task.priority !== 'none' || scheduleLabel)
         ? (
-            <span
-              className={`${styles.priority} ${styles[task.priority]}`}
-            >
-              {t(`tasks.priority.${task.priority}`)}
-            </span>
+            <div className={styles.taskMeta}>
+              {task.priority !== 'none'
+                ? (
+                    <span className={`${styles.priority} ${styles[task.priority]}`}>
+                      {t(`tasks.priority.${task.priority}`)}
+                    </span>
+                  )
+                : null}
+              {scheduleLabel && onSetSchedule
+                ? (
+                    <button
+                      className={styles.taskDue}
+                      type="button"
+                      disabled={isUpdating}
+                      aria-label={`${t('tasks.schedule.changeDate')}: ${task.title}`}
+                      onClick={(event) => {
+                        scheduleAnchorRef.current = event.currentTarget;
+                        setScheduleSource('date');
+                        focusReturnRef.current = event.currentTarget;
+                        setIsScheduleOpen(true);
+                      }}
+                    >
+                      {scheduleLabel}
+                    </button>
+                  )
+                : scheduleLabel
+                  ? <span className={styles.taskDue}>{scheduleLabel}</span>
+                  : null}
+            </div>
           )
         : null}
 
-      {onDeleteTask
+      {onSetSchedule
         ? (
-            <details
-              ref={actionsRef}
-              className={styles.taskActions}
-              onToggle={(event) => setIsActionsOpen(event.currentTarget.open)}
-            >
-              <summary
-                ref={triggerRef}
-                className={styles.iconButton}
-                aria-label={t('tasks.list.taskActions', { title: task.title })}
-                title={t('tasks.list.taskActions', { title: task.title })}
-              >
-                <EllipsisIcon />
-              </summary>
-              <div className={styles.taskActionsMenu}>
-                <button
-                  className={styles.deleteButton}
-                  type="button"
-                  disabled={isUpdating}
-                  onClick={() => onDeleteTask(task)}
-                >
-                  {t('tasks.delete.action')}
-                </button>
-              </div>
-            </details>
+            <TaskSchedulePicker
+              anchorRef={scheduleAnchorRef}
+              align={scheduleSource === 'date' ? 'end' : 'start'}
+              sideOffset={scheduleSource === 'date' ? 8 : 0}
+              open={isScheduleOpen}
+              value={{ dueDate: task.dueDate, dueTime: task.dueTime }}
+              disabled={isUpdating}
+              onOpenChange={setIsScheduleOpen}
+              onApply={(schedule) => onSetSchedule(task, schedule)}
+              onCloseAutoFocus={(event) => {
+                event.preventDefault();
+                const target = focusReturnRef.current;
+                if (target?.isConnected) target.focus();
+                else rowRef.current?.focus();
+                focusReturnRef.current = null;
+              }}
+            />
           )
         : null}
     </li>
+  );
+
+  if (!hasMenuActions) return row;
+
+  return (
+    <ContextMenuRoot>
+      <ContextMenuTrigger asChild disabled={isUpdating}>
+        {row}
+      </ContextMenuTrigger>
+      <ContextMenuContent
+        ref={contextMenuRef}
+        aria-label={t('tasks.list.taskActions', { title: task.title })}
+        onCloseAutoFocus={(event) => {
+          if (!openScheduleAfterMenuClosesRef.current) return;
+          event.preventDefault();
+          openScheduleAfterMenuClosesRef.current = false;
+          focusReturnRef.current = rowRef.current;
+          setIsScheduleOpen(true);
+        }}
+      >
+        {onSetSchedule
+          ? (
+              <ContextMenuItem onSelect={() => {
+                const bounds = contextMenuRef.current?.getBoundingClientRect();
+                if (!bounds) return;
+                // The menu unmounts before the calendar opens, so preserve its origin.
+                const origin = DOMRect.fromRect({ x: bounds.left, y: bounds.top, width: 0, height: 0 });
+                scheduleAnchorRef.current = {
+                  getBoundingClientRect: () => origin,
+                  ...(rowRef.current ? { contextElement: rowRef.current } : {}),
+                };
+                setScheduleSource('menu');
+                openScheduleAfterMenuClosesRef.current = true;
+              }}
+              >
+                <CalendarIcon />
+                {t(task.dueDate ? 'tasks.schedule.changeDate' : 'tasks.schedule.addDate')}
+              </ContextMenuItem>
+            )
+          : null}
+        {onSetSchedule && onDeleteTask ? <ContextMenuSeparator /> : null}
+        {onDeleteTask
+          ? (
+              <ContextMenuItem tone="danger" onSelect={() => onDeleteTask(task)}>
+                <TrashIcon />
+                {t('tasks.delete.action')}
+              </ContextMenuItem>
+            )
+          : null}
+      </ContextMenuContent>
+    </ContextMenuRoot>
   );
 }

@@ -18,6 +18,14 @@
     "inbox": {
       "title": "收件箱",
       "tasks": "任务",
+      "sections": {
+        "overdue": "已逾期",
+        "today": "今天",
+        "tomorrow": "明天",
+        "next_week": "接下来五天",
+        "next": "之后",
+        "completed": "已完成"
+      },
       "overview": {
         "title": "概览",
         "total": "任务总数",
@@ -48,11 +56,52 @@
     "chineseSimplified": "简体中文"
   },
   "tasks": {
+    "viewSettings": {
+      "open": "{{title}} 的设置",
+      "title": "任务显示",
+      "sortField": "排序依据",
+      "sortDirection": "排序方向",
+      "showCompleted": "保留已完成的任务",
+      "showCompletedDescription": "关闭后，任务会立即显示在“已完成”中，完成进度保持不变。",
+      "enabled": "已开启",
+      "disabled": "已关闭",
+      "fields": {
+        "title": "标题",
+        "due_at": "日期和时间",
+        "created_at": "创建日期",
+        "updated_at": "修改日期",
+        "priority": "优先级"
+      },
+      "directions": {
+        "asc": "升序",
+        "desc": "降序"
+      },
+      "cancel": "取消",
+      "apply": "应用",
+      "saving": "保存中…",
+      "saveError": "无法保存设置。",
+      "conflict": "设置已更改。请检查所选值后再次保存。",
+      "unconfirmed": "保存结果尚未确认。请刷新设置后重试。",
+      "conflictDialog": {
+        "title": "设置已更改",
+        "description": "服务器上保存了不同的任务显示设置。请选择要使用的值。",
+        "close": "关闭对话框",
+        "parameter": "设置项",
+        "yourChoice": "您的选择",
+        "serverChoice": "服务器设置",
+        "different": "不同",
+        "useServer": "使用服务器设置",
+        "applyChoice": "应用我的选择"
+      }
+    },
     "list": {
       "add": "添加任务",
       "settings": "列表设置",
       "completed": "已完成 {{completed}} / {{total}} 项任务",
       "totalCount": "任务总数：{{count}}",
+      "visibleCount": "显示的任务数：{{count}}",
+      "completedHiddenTitle": "所有任务均已完成",
+      "completedHiddenDescription": "已完成的任务已隐藏，可在“已完成”中查看。这些任务仍计入完成进度。",
       "progressLabel": "所有任务的完成进度",
       "completionLabel": "更改任务“{{title}}”的状态",
       "taskActions": "任务“{{title}}”的操作",
@@ -61,7 +110,8 @@
       "errorTitle": "无法加载任务",
       "errorDescription": "请检查连接，然后重试。",
       "loadingMore": "正在加载任务...",
-      "retry": "重试"
+      "retry": "重试",
+      "retrying": "正在重试…"
     },
     "create": {
       "label": "任务标题",
@@ -75,6 +125,19 @@
       "notice": "任务“{{title}}”已删除",
       "undo": "撤销",
       "undoing": "正在恢复..."
+    },
+    "schedule": {
+      "addDate": "添加日期",
+      "changeDate": "更改日期",
+      "today": "今天",
+      "tomorrow": "明天",
+      "date": "任务日期",
+      "time": "时间（可选）",
+      "noTime": "不设时间",
+      "invalidTime": "请输入 00:00 到 23:59 之间的时间（HH:mm）。",
+      "save": "保存",
+      "cancel": "取消",
+      "clear": "移除日期"
     },
     "priority": {
       "low": "低",
@@ -102,6 +165,7 @@
     "taskDeletionUnconfirmed": "无法确认任务是否已删除。连接恢复后请再次检查。",
     "taskRestorationUnconfirmed": "无法确认任务是否已恢复。连接恢复后请再次检查。",
     "taskStatusUnconfirmed": "无法确认任务是否已更新。连接恢复后请再次检查。",
+    "taskScheduleUnconfirmed": "无法确认任务日期是否已更新。连接恢复后请再次检查。",
     "generic": "出现错误。",
     "dismiss": "关闭错误消息"
   }

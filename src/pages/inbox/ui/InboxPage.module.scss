@@ -43,6 +43,115 @@
   box-shadow: var(--shadow-md);
 }
 
+.loadError {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.errorIcon {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-md);
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+  place-items: center;
+}
+
+.errorContent {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.errorTitle {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+}
+
+.errorDescription {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  overflow-wrap: anywhere;
+}
+
+.retryButton {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-primary-border);
+  border-radius: var(--radius-md);
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  transition: background-color 160ms ease, color 160ms ease;
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-primary-hover);
+    color: var(--color-text-inverse);
+    background: var(--color-primary-hover);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+  }
+
+  svg {
+    flex: 0 0 auto;
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
+  }
+}
+
+.refreshing {
+  animation: refresh-spin 1s linear infinite;
+}
+
+@keyframes refresh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 48rem) {
+  .loadError {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: var(--space-5);
+  }
+
+  .retryButton {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .refreshing {
+    animation: none;
+  }
+
+  .retryButton {
+    transition: none;
+  }
+}
+
 .overviewTitle {
   margin: 0 0 var(--space-4);
   color: var(--color-text-primary);

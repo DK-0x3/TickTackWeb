@@ -14,7 +14,11 @@ describe('CreateTaskForm', () => {
     await user.type(screen.getByRole('textbox', { name: 'Task title' }), '  Plan release  ');
     await user.click(screen.getByRole('button', { name: 'Add task' }));
 
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith('Plan release'));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({
+      title: 'Plan release',
+      dueDate: null,
+      dueTime: null,
+    }));
     expect(onCancel).toHaveBeenCalledOnce();
   });
 

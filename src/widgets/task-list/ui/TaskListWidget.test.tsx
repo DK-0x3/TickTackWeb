@@ -12,6 +12,8 @@ const task: Task = {
   title: 'Review pagination',
   description: null,
   priority: 'none',
+  dueDate: null,
+  dueTime: null,
   completedAt: null,
   createdAt: '2026-09-25T12:00:00Z',
   updatedAt: '2026-09-25T12:00:00Z',

@@ -2,29 +2,12 @@ import { baseApi } from '@/shared/api';
 
 import type {
   CreateTaskInput,
+  SetTaskScheduleInput,
   SetTaskCompletedInput,
   Task,
-  TaskPriority,
 } from '@/entities/task';
-
-interface TaskDto {
-  id: string;
-  user_id: string;
-  title: string;
-  description: string | null;
-  priority: TaskPriority;
-  completed_at: string | null;
-  created_at: string;
-  updated_at: string;
-  version: number;
-}
-
-interface TaskPageDto {
-  items: TaskDto[];
-  next_cursor: string | null;
-  total: number;
-  completed_total: number;
-}
+import { mapTask } from '@/entities/task/model/task.mappers';
+import type { TaskDto, TaskPageDto } from '@/entities/task/model/task.dto';
 
 interface TaskPage {
   items: Task[];
@@ -32,18 +15,6 @@ interface TaskPage {
   total: number;
   completedTotal: number;
 }
-
-const mapTask = (task: TaskDto): Task => ({
-  id: task.id,
-  userId: task.user_id,
-  title: task.title,
-  description: task.description,
-  priority: task.priority,
-  completedAt: task.completed_at,
-  createdAt: task.created_at,
-  updatedAt: task.updated_at,
-  version: task.version,
-});
 
 const updateTaskInPages = (
   pages: TaskPage[],
@@ -92,10 +63,16 @@ export const taskApi = baseApi.injectEndpoints({
       providesTags: (_result, _error, id) => [{ type: 'Task', id }],
     }),
     createTask: build.mutation<Task, CreateTaskInput>({
-      query: (body) => ({
+      query: ({ title, description, priority, dueDate, dueTime }) => ({
         url: '/tasks',
         method: 'POST',
-        body,
+        body: {
+          title,
+          description,
+          priority,
+          due_date: dueDate,
+          due_time: dueTime,
+        },
       }),
       transformResponse: (response: TaskDto) => mapTask(response),
       invalidatesTags: [{ type: 'Task', id: 'LIST' }],
@@ -139,6 +116,33 @@ export const taskApi = baseApi.injectEndpoints({
         }
       },
     }),
+    setTaskSchedule: build.mutation<Task, SetTaskScheduleInput>({
+      query: ({ id, dueDate, dueTime }) => ({
+        url: `/tasks/${id}/schedule`,
+        method: 'PATCH',
+        body: { due_date: dueDate, due_time: dueTime },
+      }),
+      transformResponse: (response: TaskDto) => mapTask(response),
+      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+        try {
+          const { data: savedTask } = await queryFulfilled;
+          dispatch(taskApi.util.updateQueryData('getTasks', undefined, (draft) => {
+            updateTaskInPages(draft.pages, id, (task) => {
+              Object.assign(task, savedTask);
+            });
+          }));
+          dispatch(taskApi.util.updateQueryData('getTask', id, (draft) => {
+            Object.assign(draft, savedTask);
+          }));
+          dispatch(taskApi.util.invalidateTags([{ type: 'Task', id: 'LIST' }]));
+        } catch {
+          dispatch(taskApi.util.invalidateTags([
+            { type: 'Task', id },
+            { type: 'Task', id: 'LIST' },
+          ]));
+        }
+      },
+    }),
     deleteTask: build.mutation<void, string>({
       query: (id) => ({
         url: `/tasks/${id}`,
@@ -169,6 +173,7 @@ export const {
   useLazyGetTaskQuery,
   useGetTasksInfiniteQuery,
   useSetTaskCompletedMutation,
+  useSetTaskScheduleMutation,
   useDeleteTaskMutation,
   useRestoreTaskMutation,
 } = taskApi;

@@ -9,6 +9,7 @@ const errorCodeKeys = {
   invalid_task_id: 'errors.invalidRequest',
   task_not_found: 'errors.taskNotFound',
   validation_failed: 'errors.validation',
+  invalid_response: 'errors.invalidResponse',
 } as const;
 
 export const getApiErrorTranslationKey = (

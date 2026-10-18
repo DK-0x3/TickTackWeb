@@ -9,6 +9,7 @@ import {
   useLazyGetTaskQuery,
   useRestoreTaskMutation,
   useSetTaskCompletedMutation,
+  useSetTaskScheduleMutation,
 } from '@/entities/task';
 import { useApiErrorMessage } from '@/shared/api';
 
@@ -21,6 +22,7 @@ vi.mock('@/entities/task', () => ({
   useLazyGetTaskQuery: vi.fn(),
   useRestoreTaskMutation: vi.fn(),
   useSetTaskCompletedMutation: vi.fn(),
+  useSetTaskScheduleMutation: vi.fn(),
 }));
 
 vi.mock('@/shared/api', () => ({
@@ -42,6 +44,8 @@ const makeTask = (id: string): Task => ({
   title: `Task ${id}`,
   description: null,
   priority: 'none',
+  dueDate: null,
+  dueTime: null,
   completedAt: null,
   createdAt: '2026-09-25T12:00:00Z',
   updatedAt: '2026-09-25T12:00:00Z',
@@ -78,6 +82,10 @@ beforeEach(() => {
     vi.fn(),
     {},
   ] as unknown as ReturnType<typeof useSetTaskCompletedMutation>);
+  vi.mocked(useSetTaskScheduleMutation).mockReturnValue([
+    vi.fn(),
+    {},
+  ] as unknown as ReturnType<typeof useSetTaskScheduleMutation>);
   vi.mocked(useDeleteTaskMutation).mockReturnValue([
     vi.fn(),
     {},

@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { CheckIcon, XIcon } from '@/shared/ui/icon';
+import { formatTaskDate, TaskSchedulePicker, type CreateTaskInput } from '@/entities/task';
+import { CalendarIcon, CheckIcon, XIcon } from '@/shared/ui/icon';
 
 import styles from './CreateTaskForm.module.scss';
 
@@ -9,7 +10,7 @@ interface CreateTaskFormProps {
   errorMessage?: string | null;
   isSubmitting?: boolean;
   onCancel: () => void;
-  onSubmit: (title: string) => Promise<boolean>;
+  onSubmit: (input: CreateTaskInput) => Promise<boolean>;
 }
 
 export function CreateTaskForm({
@@ -18,8 +19,11 @@ export function CreateTaskForm({
   onCancel,
   onSubmit,
 }: CreateTaskFormProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [title, setTitle] = useState('');
+  const [dueDate, setDueDate] = useState('');
+  const [dueTime, setDueTime] = useState('');
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const normalizedTitle = title.trim();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -29,10 +33,16 @@ export function CreateTaskForm({
       return;
     }
 
-    const isCreated = await onSubmit(normalizedTitle);
+    const isCreated = await onSubmit({
+      title: normalizedTitle,
+      dueDate: dueDate || null,
+      dueTime: dueDate && dueTime ? dueTime : null,
+    });
 
     if (isCreated) {
       setTitle('');
+      setDueDate('');
+      setDueTime('');
       onCancel();
     }
   };
@@ -91,6 +101,29 @@ export function CreateTaskForm({
           <XIcon />
         </button>
       </div>
+
+      <TaskSchedulePicker
+        open={isScheduleOpen}
+        value={{ dueDate: dueDate || null, dueTime: dueTime || null }}
+        disabled={isSubmitting}
+        onOpenChange={setIsScheduleOpen}
+        onApply={(schedule) => {
+          setDueDate(schedule.dueDate ?? '');
+          setDueTime(schedule.dueTime ?? '');
+          return true;
+        }}
+      >
+        <button
+          className={styles.scheduleToggle}
+          type="button"
+          aria-label={t(dueDate ? 'tasks.schedule.changeDate' : 'tasks.schedule.addDate')}
+          disabled={isSubmitting}
+        >
+          <CalendarIcon />
+          {dueDate ? formatTaskDate(dueDate, i18n.language) : t('tasks.schedule.addDate')}
+          {dueTime ? ` · ${dueTime}` : null}
+        </button>
+      </TaskSchedulePicker>
 
       {errorMessage
         ? (

@@ -16,6 +16,8 @@ const taskDto = (id: string, completedAt: string | null = null, version = 1) => 
   title: `Task ${id}`,
   description: null,
   priority: 'none',
+  due_date: null,
+  due_time: null,
   completed_at: completedAt,
   created_at: '2026-09-25T12:00:00Z',
   updated_at: '2026-09-25T12:00:00Z',

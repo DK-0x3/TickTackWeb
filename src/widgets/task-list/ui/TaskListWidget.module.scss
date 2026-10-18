@@ -1,10 +1,15 @@
 .widget {
+  container-type: inline-size;
   width: 100%;
   overflow: hidden;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   box-shadow: var(--shadow-md);
+
+  &[data-header-only='true'] .header {
+    border-bottom: 0;
+  }
 }
 
 .header {
@@ -15,6 +20,18 @@
 }
 
 .titleRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 13rem) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: center;
+  min-width: 0;
+
+  &[data-has-progress='false'] {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.titleGroup {
   display: flex;
   gap: var(--space-3);
   align-items: center;
@@ -40,6 +57,7 @@
 }
 
 .count {
+  flex-shrink: 0;
   display: inline-grid;
   min-width: 1.75rem;
   min-height: 1.75rem;
@@ -56,7 +74,7 @@
   display: flex;
   gap: var(--space-2);
   align-items: center;
-  margin-left: auto;
+  justify-self: end;
 }
 
 .addButton,
@@ -90,84 +108,15 @@
   }
 }
 
-.iconButton {
-  display: grid;
-  flex: 0 0 auto;
-  width: 2.5rem;
-  height: 2.5rem;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
-  background: transparent;
-  place-items: center;
-  transition:
-    color 160ms ease,
-    background-color 160ms ease;
-
-  &:hover {
-    color: var(--color-text-primary);
-    background: var(--color-surface-hover);
-  }
-}
-
-.taskActions {
-  position: relative;
-  z-index: 1;
-
-  &[open] {
-    z-index: 2;
-  }
-}
-
-.taskActions > summary {
-  cursor: pointer;
-  list-style: none;
-
-  &::-webkit-details-marker {
-    display: none;
-  }
-}
-
-.taskActionsMenu {
-  position: absolute;
-  bottom: calc(100% + var(--space-1));
-  right: 0;
-  min-width: 9rem;
-  padding: var(--space-1);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-md);
-}
-
-.deleteButton {
-  width: 100%;
-  padding: var(--space-2) var(--space-3);
-  border: 0;
-  border-radius: var(--radius-sm);
-  color: var(--color-danger);
-  background: transparent;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-
-  &:hover:not(:disabled) {
-    background: var(--color-danger-soft);
-  }
-}
-
 .progressRow {
   display: grid;
-  grid-template-columns: auto minmax(5rem, 11rem) auto;
-  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--space-2);
+  row-gap: var(--space-1);
   align-items: center;
-  justify-content: start;
-}
-
-.progressText {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-xs);
+  width: 100%;
+  min-width: 0;
+  justify-self: center;
 }
 
 .progressTrack {
@@ -193,6 +142,26 @@
 
 .content {
   min-height: 11rem;
+
+  &[data-empty='true'] {
+    min-height: 0;
+  }
+}
+
+.headerEmpty {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+  text-align: center;
+  justify-items: center;
+
+  .stateTitle {
+    font-size: var(--font-size-sm);
+  }
+
+  .stateDescription {
+    font-size: var(--font-size-xs);
+  }
 }
 
 .paginationState {
@@ -240,7 +209,7 @@
 
 .taskItem {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: var(--space-3);
   align-items: center;
   min-height: 3.75rem;
@@ -254,6 +223,10 @@
 
   &:hover {
     background: var(--color-surface-hover);
+  }
+
+  &:focus-visible {
+    outline-offset: -0.1875rem;
   }
 }
 
@@ -297,6 +270,41 @@
   line-height: var(--line-height-normal);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.taskMain {
+  min-width: 0;
+}
+
+.taskMeta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-6);
+  row-gap: var(--space-2);
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.taskDue {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  color: var(--color-text-muted);
+  background: transparent;
+  font: inherit;
+  font-size: var(--font-size-xs);
+
+  &:is(button) {
+    cursor: pointer;
+  }
+
+  &:is(button):hover:not(:disabled) {
+    color: var(--color-primary);
+  }
 }
 
 .completedTitle {
@@ -400,45 +408,40 @@
   }
 }
 
+@container (max-width: 40rem) {
+  .titleRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .headerActions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .progressRow,
+  .headerEmpty {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    max-width: 18rem;
+  }
+}
+
 @media (max-width: 36rem) {
   .header {
     padding: var(--space-4);
   }
 
-  .titleRow {
-    flex-wrap: wrap;
-  }
-
-  .headerActions {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .addButton {
-    flex: 1 1 auto;
-  }
-
-  .progressRow {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-
-  .progressText {
-    grid-column: 1 / -1;
-  }
-
   .taskItem {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr);
   }
 
-  .priority {
+  .taskMeta {
     grid-column: 2;
-    justify-self: start;
+    grid-row: 2;
+    column-gap: var(--space-4);
+    justify-content: flex-start;
   }
 
-  .taskItem > .taskActions {
-    grid-column: 3;
-    grid-row: 1 / span 2;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

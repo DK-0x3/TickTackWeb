@@ -6,6 +6,8 @@ export interface Task {
   title: string;
   description: string | null;
   priority: TaskPriority;
+  dueDate: string | null;
+  dueTime: string | null;
   completedAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -16,6 +18,17 @@ export interface CreateTaskInput {
   title: string;
   description?: string | null;
   priority?: TaskPriority;
+  dueDate?: string | null;
+  dueTime?: string | null;
+}
+
+export interface TaskScheduleInput {
+  dueDate: string | null;
+  dueTime: string | null;
+}
+
+export interface SetTaskScheduleInput extends TaskScheduleInput {
+  id: string;
 }
 
 export interface SetTaskCompletedInput {

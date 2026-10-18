@@ -1,0 +1,122 @@
+.root {
+  display: inline-flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  min-width: 0;
+  min-height: 2.5rem;
+  color: var(--color-text-primary);
+  cursor: pointer;
+
+  &[data-disabled='true'] {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.control {
+  position: relative;
+  display: grid;
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.0625rem;
+}
+
+.input {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.box {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-inverse);
+  background: var(--color-surface);
+  place-items: center;
+  transition: border-color 140ms ease, background-color 140ms ease;
+}
+
+.check {
+  width: 0.875rem;
+  height: 0.875rem;
+  opacity: 0;
+  transform: scale(0.75);
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.input:checked + .box {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+
+  .check {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.root:hover .input:not(:disabled) + .box {
+  border-color: var(--color-primary);
+}
+
+.root:hover .input:checked:not(:disabled) + .box {
+  border-color: var(--color-primary-hover);
+  background: var(--color-primary-hover);
+}
+
+.input:focus-visible + .box {
+  outline: 0.1875rem solid var(--color-focus-ring);
+  outline-offset: 0.1875rem;
+}
+
+.text {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+  line-height: var(--line-height-normal);
+  overflow-wrap: anywhere;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.description {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box,
+  .check {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .input {
+    opacity: 1;
+    appearance: auto;
+
+    &:focus-visible {
+      outline: auto;
+    }
+  }
+
+  .box {
+    visibility: hidden;
+  }
+}

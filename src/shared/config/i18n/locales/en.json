@@ -18,6 +18,14 @@
     "inbox": {
       "title": "Inbox",
       "tasks": "Tasks",
+      "sections": {
+        "overdue": "Overdue",
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "next_week": "Next week",
+        "next": "Upcoming",
+        "completed": "Completed"
+      },
       "overview": {
         "title": "Overview",
         "total": "Total tasks",
@@ -48,11 +56,52 @@
     "chineseSimplified": "Chinese (Simplified)"
   },
   "tasks": {
+    "viewSettings": {
+      "open": "Settings for {{title}}",
+      "title": "Task display",
+      "sortField": "Sort by",
+      "sortDirection": "Direction",
+      "showCompleted": "Keep completed tasks",
+      "showCompletedDescription": "Turn this off to show them in Completed immediately. Progress is preserved.",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "fields": {
+        "title": "Title",
+        "due_at": "Date and time",
+        "created_at": "Creation date",
+        "updated_at": "Modification date",
+        "priority": "Priority"
+      },
+      "directions": {
+        "asc": "Ascending",
+        "desc": "Descending"
+      },
+      "cancel": "Cancel",
+      "apply": "Apply",
+      "saving": "Saving…",
+      "saveError": "Could not save settings.",
+      "conflict": "Settings have changed. Review your choices before saving again.",
+      "unconfirmed": "The save result is unconfirmed. Refresh settings before trying again.",
+      "conflictDialog": {
+        "title": "Settings have changed",
+        "description": "Different task display settings are saved on the server. Choose which values to use.",
+        "close": "Close dialog",
+        "parameter": "Setting",
+        "yourChoice": "Your choice",
+        "serverChoice": "On the server",
+        "different": "Different",
+        "useServer": "Use server settings",
+        "applyChoice": "Apply my choice"
+      }
+    },
     "list": {
       "add": "Add task",
       "settings": "List settings",
       "completed": "{{completed}} of {{total}} tasks completed",
       "totalCount": "Total tasks: {{count}}",
+      "visibleCount": "Visible tasks: {{count}}",
+      "completedHiddenTitle": "All tasks completed",
+      "completedHiddenDescription": "Completed tasks are hidden and available in Completed. They still count toward progress.",
       "progressLabel": "Completion progress of all tasks",
       "completionLabel": "Change status of task “{{title}}”",
       "taskActions": "Actions for task “{{title}}”",
@@ -61,7 +110,8 @@
       "errorTitle": "Tasks could not be loaded",
       "errorDescription": "Check your connection and try again.",
       "loadingMore": "Loading tasks...",
-      "retry": "Try again"
+      "retry": "Try again",
+      "retrying": "Retrying…"
     },
     "create": {
       "label": "Task title",
@@ -75,6 +125,19 @@
       "notice": "Task “{{title}}” deleted",
       "undo": "Undo",
       "undoing": "Restoring..."
+    },
+    "schedule": {
+      "addDate": "Add date",
+      "changeDate": "Change date",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "date": "Due date",
+      "time": "Time (optional)",
+      "noTime": "No time",
+      "invalidTime": "Enter a time from 00:00 to 23:59 (HH:mm).",
+      "save": "Save",
+      "cancel": "Cancel",
+      "clear": "Remove date"
     },
     "priority": {
       "low": "Low",
@@ -102,6 +165,7 @@
     "taskDeletionUnconfirmed": "Could not confirm whether the task was deleted. Check again when connected.",
     "taskRestorationUnconfirmed": "Could not confirm whether the task was restored. Check again when connected.",
     "taskStatusUnconfirmed": "Could not confirm whether the task was updated. Check again when connected.",
+    "taskScheduleUnconfirmed": "Could not confirm whether the task date was updated. Check again when connected.",
     "generic": "Something went wrong.",
     "dismiss": "Dismiss error message"
   }

@@ -42,6 +42,12 @@ export const normalizeApiError = (error: unknown): ApiError => {
         kind: 'parsing',
         status: error.originalStatus,
       };
+    case 'CUSTOM_ERROR':
+      return {
+        code: getBackendErrorCode(error.data),
+        kind: 'unknown',
+        status: null,
+      };
     default:
       return { code: null, kind: 'unknown', status: null };
   }
