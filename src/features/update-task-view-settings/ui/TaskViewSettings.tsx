@@ -1,11 +1,11 @@
 import { useId, useRef, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
-import * as Select from '@radix-ui/react-select';
 import { useTranslation } from 'react-i18next';
 
 import type { TaskViewDto, TaskViewSortDirection, TaskViewSortField } from '@/entities/task-view';
-import { CheckIcon, EllipsisIcon } from '@/shared/ui/icon';
+import { EllipsisIcon } from '@/shared/ui/icon';
 import { Checkbox } from '@/shared/ui/checkbox';
+import { Select } from '@/shared/ui/select';
 
 import { useTaskViewSettings } from '../model/useTaskViewSettings';
 import styles from './TaskViewSettings.module.scss';
@@ -73,22 +73,22 @@ export function TaskViewSettings({ view, title }: TaskViewSettingsProps) {
               <div className={styles.fields}>
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor={fieldId}>{t('tasks.viewSettings.sortField')}</label>
-                  <SettingsSelect
+                  <Select
                     id={fieldId}
                     value={controller.draft.sortField}
                     disabled={!controller.isReady || controller.isSaving}
                     options={sortFields.map((value) => ({ value, label: t(`tasks.viewSettings.fields.${value}`) }))}
-                    onChange={controller.setSortField}
+                    onValueChange={controller.setSortField}
                   />
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor={directionId}>{t('tasks.viewSettings.sortDirection')}</label>
-                  <SettingsSelect
+                  <Select
                     id={directionId}
                     value={controller.draft.sortDirection}
                     disabled={!controller.isReady || controller.isSaving}
                     options={sortDirections.map((value) => ({ value, label: t(`tasks.viewSettings.directions.${value}`) }))}
-                    onChange={controller.setSortDirection}
+                    onValueChange={controller.setSortDirection}
                   />
                 </div>
                 {canShowCompleted && (
@@ -135,42 +135,5 @@ export function TaskViewSettings({ view, title }: TaskViewSettingsProps) {
         )
       }
     </>
-  );
-}
-
-interface SettingsSelectProps<Value extends string> {
-  id: string;
-  value: Value;
-  disabled: boolean;
-  options: readonly { value: Value; label: string }[];
-  onChange: (value: Value) => void;
-}
-
-function SettingsSelect<Value extends string>({ id, value, disabled, options, onChange }: SettingsSelectProps<Value>) {
-  return (
-    <Select.Root
-      value={value}
-      disabled={disabled}
-      onValueChange={(nextValue) => {
-        const option = options.find((item) => item.value === nextValue);
-        if (option) onChange(option.value);
-      }}
-    >
-      <Select.Trigger className={styles.selectTrigger} id={id} type="button">
-        <Select.Value />
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Content className={styles.selectContent} position="popper" sideOffset={4} collisionPadding={12}>
-          <Select.Viewport className={styles.selectViewport}>
-            {options.map((option) => (
-              <Select.Item className={styles.option} key={option.value} value={option.value}>
-                <Select.ItemText>{option.label}</Select.ItemText>
-                <Select.ItemIndicator className={styles.indicator}><CheckIcon /></Select.ItemIndicator>
-              </Select.Item>
-            ))}
-          </Select.Viewport>
-        </Select.Content>
-      </Select.Portal>
-    </Select.Root>
   );
 }

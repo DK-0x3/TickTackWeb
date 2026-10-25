@@ -2,7 +2,7 @@ import { DayPicker, useDayPicker, type DropdownProps } from 'react-day-picker';
 import { enUS, ru, zhCN } from 'react-day-picker/locale';
 import 'react-day-picker/style.css';
 
-import { ScheduleSelect } from './ScheduleSelect';
+import { Select } from '@/shared/ui/select';
 import styles from './TaskSchedulePicker.module.scss';
 
 interface TaskCalendarProps {
@@ -16,13 +16,14 @@ function MonthDropdown({ value, options, disabled, 'aria-label': ariaLabel }: Dr
   const displayedMonth = months[0]?.date;
 
   return (
-    <ScheduleSelect
-      ariaLabel={ariaLabel ?? ''}
+    <Select
+      variant="compact"
+      aria-label={ariaLabel ?? ''}
       disabled={Boolean(disabled)}
       options={(options ?? []).map(({ value: optionValue, label, disabled: optionDisabled }) => ({
         value: String(optionValue),
         label,
-        disabled: optionDisabled,
+        disabled: Boolean(optionDisabled),
       }))}
       value={String(value)}
       onValueChange={(selectedMonth) => {
@@ -39,13 +40,14 @@ function YearDropdown({ value, options, disabled, 'aria-label': ariaLabel }: Dro
   const displayedMonth = months[0]?.date;
 
   return (
-    <ScheduleSelect
-      ariaLabel={ariaLabel ?? ''}
+    <Select
+      variant="compact"
+      aria-label={ariaLabel ?? ''}
       disabled={Boolean(disabled)}
       options={(options ?? []).map(({ value: optionValue, label, disabled: optionDisabled }) => ({
         value: String(optionValue),
         label,
-        disabled: optionDisabled,
+        disabled: Boolean(optionDisabled),
       }))}
       value={String(value)}
       onValueChange={(selectedYear) => {
