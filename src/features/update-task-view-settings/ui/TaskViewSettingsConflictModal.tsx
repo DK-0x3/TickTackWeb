@@ -50,6 +50,13 @@ export function TaskViewSettingsConflictModal({
       serverValue: t(serverSettings.showCompleted ? 'tasks.viewSettings.enabled' : 'tasks.viewSettings.disabled'),
       differs: draft.showCompleted !== serverSettings.showCompleted,
     },
+    {
+      key: 'showPriority',
+      label: t('tasks.viewSettings.showPriority'),
+      draftValue: t(draft.showPriority ? 'tasks.viewSettings.enabled' : 'tasks.viewSettings.disabled'),
+      serverValue: t(serverSettings.showPriority ? 'tasks.viewSettings.enabled' : 'tasks.viewSettings.disabled'),
+      differs: draft.showPriority !== serverSettings.showPriority,
+    },
   ];
 
   return (

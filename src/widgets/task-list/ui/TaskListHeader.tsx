@@ -1,12 +1,16 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { EllipsisIcon, PlusIcon } from '@/shared/ui/icon';
+import { ChevronDownIcon, ChevronUpIcon, EllipsisIcon, PlusIcon } from '@/shared/ui/icon';
 
 import styles from './TaskListWidget.module.scss';
 import { TaskListEmpty } from './TaskListState';
 
 interface TaskListHeaderProps {
+  contentId: string;
+  isCollapsed: boolean;
+  isCollapseSaving: boolean;
+  onCollapsedChange?: (value: boolean) => void;
   completedCount: number;
   headerIcon?: ReactNode;
   settingsAction?: ReactNode;
@@ -21,6 +25,10 @@ interface TaskListHeaderProps {
 }
 
 export function TaskListHeader({
+  contentId,
+  isCollapsed,
+  isCollapseSaving,
+  onCollapsedChange,
   completedCount,
   headerIcon,
   settingsAction,
@@ -42,6 +50,23 @@ export function TaskListHeader({
     <header className={styles.header}>
       <div className={styles.titleRow} data-has-progress={showProgress || isEmpty}>
         <div className={styles.titleGroup}>
+          {onCollapsedChange && !isEmpty
+            ? (
+                <button
+                  className={styles.collapseToggle}
+                  type="button"
+                  aria-expanded={!isCollapsed}
+                  aria-controls={contentId}
+                  aria-busy={isCollapseSaving}
+                  aria-label={t(isCollapsed ? 'tasks.list.expand' : 'tasks.list.collapse', { title })}
+                  title={t(isCollapsed ? 'tasks.list.expand' : 'tasks.list.collapse', { title })}
+                  disabled={isCollapseSaving}
+                  onClick={() => onCollapsedChange(!isCollapsed)}
+                >
+                  {isCollapsed ? <ChevronDownIcon /> : <ChevronUpIcon />}
+                </button>
+              )
+            : null}
           {headerIcon ? <span className={styles.headerIcon}>{headerIcon}</span> : null}
           <h2 className={styles.title}>{title}</h2>
           <span
@@ -80,7 +105,7 @@ export function TaskListHeader({
             <button
               className={styles.addButton}
               type="button"
-              disabled={isCreateFormOpen}
+              disabled={(isCreateFormOpen && !isCollapsed) || (isCollapsed && isCollapseSaving)}
               onClick={onAddTask}
             >
               <PlusIcon />

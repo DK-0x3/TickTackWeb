@@ -26,9 +26,11 @@ export function TaskListEmpty({ completedHidden = false, compact = false }: { co
   return (
     <div className={compact ? styles.headerEmpty : styles.state}>
       <h2 className={styles.stateTitle}>{t(completedHidden ? 'tasks.list.completedHiddenTitle' : 'tasks.list.emptyTitle')}</h2>
-      <p className={styles.stateDescription}>
-        {t(completedHidden ? 'tasks.list.completedHiddenDescription' : 'tasks.list.emptyDescription')}
-      </p>
+      {!compact && (
+        <p className={styles.stateDescription}>
+          {t(completedHidden ? 'tasks.list.completedHiddenDescription' : 'tasks.list.emptyDescription')}
+        </p>
+      )}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 export {
+  useSetViewCollapsedMutation,
   useGetInboxViewsQuery,
   useLazyGetInboxViewsQuery,
   useGetViewTasksPageInfiniteQuery,
@@ -11,6 +12,7 @@ export type {
 } from './model/taskView.dto';
 export type {
   GetViewTasksInput,
+  SetViewCollapsedInput,
   InboxViews,
   TaskView,
   TaskViewSection,

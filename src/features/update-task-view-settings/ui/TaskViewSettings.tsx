@@ -101,6 +101,14 @@ export function TaskViewSettings({ view, title }: TaskViewSettingsProps) {
                     onCheckedChange={controller.setShowCompleted}
                   />
                 )}
+                <Checkbox
+                  className={styles.checkboxField}
+                  label={t('tasks.viewSettings.showPriority')}
+                  description={t('tasks.viewSettings.showPriorityDescription')}
+                  checked={controller.draft.showPriority}
+                  disabled={!controller.isReady || controller.isSaving}
+                  onCheckedChange={controller.setShowPriority}
+                />
               </div>
               {controller.errorMessage ? <p className={styles.error} role="alert">{controller.errorMessage}</p> : null}
               <div className={styles.actions}>
@@ -125,6 +133,7 @@ export function TaskViewSettings({ view, title }: TaskViewSettingsProps) {
               sortField: controller.conflictView.sort_field,
               sortDirection: controller.conflictView.sort_direction,
               showCompleted: controller.conflictView.show_completed,
+              showPriority: controller.conflictView.show_priority,
             }}
             isSaving={controller.isSaving}
             returnFocusRef={panelRef}

@@ -63,6 +63,8 @@
       "sortDirection": "Direction",
       "showCompleted": "Keep completed tasks",
       "showCompletedDescription": "Turn this off to show them in Completed immediately. Progress is preserved.",
+      "showPriority": "Show priority labels",
+      "showPriorityDescription": "Turn this off to indicate priority with the checkbox color instead of a label.",
       "enabled": "Enabled",
       "disabled": "Disabled",
       "fields": {
@@ -81,7 +83,7 @@
       "saving": "Saving…",
       "saveError": "Could not save settings.",
       "conflict": "Settings have changed. Review your choices before saving again.",
-      "unconfirmed": "The save result is unconfirmed. Refresh settings before trying again.",
+      "unconfirmed": "Could not confirm saving. Your choices are kept; try saving again.",
       "conflictDialog": {
         "title": "Settings have changed",
         "description": "Different task display settings are saved on the server. Choose which values to use.",
@@ -95,6 +97,11 @@
       }
     },
     "list": {
+      "collapse": "Collapse {{title}}",
+      "expand": "Expand {{title}}",
+      "collapseSaveError": "Could not save the display state. The previous state has been restored.",
+      "collapseUnconfirmed": "Could not confirm saving the display state. You can try saving it again.",
+      "retryCollapse": "Retry saving",
       "add": "Add task",
       "settings": "List settings",
       "completed": "{{completed}} of {{total}} tasks completed",
@@ -105,8 +112,8 @@
       "progressLabel": "Completion progress of all tasks",
       "completionLabel": "Change status of task “{{title}}”",
       "taskActions": "Actions for task “{{title}}”",
-      "emptyTitle": "No tasks in Inbox yet",
-      "emptyDescription": "Add your first task to start planning.",
+      "emptyTitle": "No tasks in this section yet",
+      "emptyDescription": "Tasks will appear here when they match this section.",
       "errorTitle": "Tasks could not be loaded",
       "errorDescription": "Check your connection and try again.",
       "loadingMore": "Loading tasks...",
@@ -140,6 +147,7 @@
       "clear": "Remove date"
     },
     "priority": {
+      "description": "Priority: {{priority}}",
       "low": "Low",
       "medium": "Medium",
       "high": "High"

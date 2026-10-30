@@ -33,8 +33,14 @@ export const TaskViewDtoSchema = z.object({
   sort_field: TaskViewSortFieldSchema,
   sort_direction: TaskViewSortDirectionSchema,
   show_completed: z.boolean(),
+  show_priority: z.boolean(),
+  is_collapsed: z.boolean(),
   version: z.number().int().positive(),
 }) satisfies z.ZodType<TaskViewDto>;
+
+export const ViewCollapsedResponseSchema = z.object({
+  is_collapsed: z.boolean(),
+});
 
 export const conflictErrorSchema = z.object({
   status: z.literal(409),

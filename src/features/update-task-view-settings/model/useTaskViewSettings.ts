@@ -13,6 +13,7 @@ export interface TaskViewSettingsDraft {
   sortField: TaskViewSortField;
   sortDirection: TaskViewSortDirection;
   showCompleted: boolean;
+  showPriority: boolean;
 }
 
 type InitialSettings = TaskViewSettingsDraft & {
@@ -29,6 +30,7 @@ export interface TaskViewSettingsController {
   setSortField: (value: TaskViewSortField) => void;
   setSortDirection: (value: TaskViewSortDirection) => void;
   setShowCompleted: (value: boolean) => void;
+  setShowPriority: (value: boolean) => void;
   reset: () => void;
   save: () => Promise<boolean>;
   clearConflict: VoidFunction;
@@ -45,6 +47,7 @@ export function useTaskViewSettings(
     sortField: view.sort_field,
     sortDirection: view.sort_direction,
     showCompleted: view.show_completed,
+    showPriority: view.show_priority,
   });
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -52,6 +55,7 @@ export function useTaskViewSettings(
     sortField: view.sort_field,
     sortDirection: view.sort_direction,
     showCompleted: view.show_completed,
+    showPriority: view.show_priority,
     version: view.version,
   });
   const [conflictView, setConflictView] = useState<TaskViewDto | null>(null);
@@ -65,6 +69,7 @@ export function useTaskViewSettings(
       sortField: view.sort_field,
       sortDirection: view.sort_direction,
       showCompleted: view.show_completed,
+      showPriority: view.show_priority,
       version: view.version,
     };
 
@@ -73,6 +78,7 @@ export function useTaskViewSettings(
       sortField: settings.sortField,
       sortDirection: settings.sortDirection,
       showCompleted: settings.showCompleted,
+      showPriority: settings.showPriority,
     });
     setErrorMessage(null);
   };
@@ -80,6 +86,7 @@ export function useTaskViewSettings(
   const isDirty
     = draft.sortField !== initialSettings.sortField
       || draft.sortDirection !== initialSettings.sortDirection
+      || draft.showPriority !== initialSettings.showPriority
       || draft.showCompleted !== initialSettings.showCompleted;
 
   const setSortField = (value: TaskViewSortField) => {
@@ -92,6 +99,10 @@ export function useTaskViewSettings(
 
   const setShowCompleted = (value: boolean) => {
     setDraft((current) => ({ ...current, showCompleted: value }));
+  };
+
+  const setShowPriority = (value: boolean) => {
+    setDraft((current) => ({ ...current, showPriority: value }));
   };
 
   const save = async (newDraft?: TaskViewSettingsDraft, version?: number) => {
@@ -114,6 +125,7 @@ export function useTaskViewSettings(
         sortField: response.sort_field,
         sortDirection: response.sort_direction,
         showCompleted: response.show_completed,
+        showPriority: response.show_priority,
         version: response.version,
       });
       return true;
@@ -129,11 +141,13 @@ export function useTaskViewSettings(
             resultDraft.sortDirection === conflict.sort_direction
             && resultDraft.sortField === conflict.sort_field
             && resultDraft.showCompleted === conflict.show_completed
+            && resultDraft.showPriority === conflict.show_priority
           ) {
             setInitialSettings({
               sortField: conflict.sort_field,
               sortDirection: conflict.sort_direction,
               showCompleted: conflict.show_completed,
+              showPriority: conflict.show_priority,
               version: conflict.version,
             });
             return true;
@@ -166,6 +180,7 @@ export function useTaskViewSettings(
       sortField: conflictView.sort_field,
       sortDirection: conflictView.sort_direction,
       showCompleted: conflictView.show_completed,
+      showPriority: conflictView.show_priority,
     };
     setDraft(newDraft);
     setInitialSettings({
@@ -183,6 +198,7 @@ export function useTaskViewSettings(
       sortField: conflictView.sort_field,
       sortDirection: conflictView.sort_direction,
       showCompleted: conflictView.show_completed,
+      showPriority: conflictView.show_priority,
       version: expectedVersion,
     });
     setConflictView(null);
@@ -204,6 +220,7 @@ export function useTaskViewSettings(
     setSortField,
     setSortDirection,
     setShowCompleted,
+    setShowPriority,
     reset,
     save,
     clearConflict,

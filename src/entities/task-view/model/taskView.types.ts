@@ -14,7 +14,14 @@ export interface TaskView {
   sortField: TaskViewSortField;
   sortDirection: TaskViewSortDirection;
   showCompleted: boolean;
+  showPriority: boolean;
+  isCollapsed: boolean;
   version: number;
+}
+
+export interface SetViewCollapsedInput {
+  viewId: string;
+  isCollapsed: boolean;
 }
 
 export interface InboxViews {
@@ -44,5 +51,6 @@ export interface UpdateViewSettingsInput {
   sortField: TaskViewSortField;
   sortDirection: TaskViewSortDirection;
   showCompleted: boolean;
+  showPriority: boolean;
   expectedVersion: number;
 }

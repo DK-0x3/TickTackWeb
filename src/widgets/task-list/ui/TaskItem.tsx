@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatTaskDueDate, TaskSchedulePicker, type Task, type TaskScheduleInput } from '@/entities/task';
@@ -20,6 +20,7 @@ interface TaskItemProps {
   onDeleteTask?: (task: Task) => void;
   onSetSchedule?: (task: Task, schedule: TaskScheduleInput) => Promise<boolean>;
   onToggleCompleted: (task: Task) => void;
+  showPriority: boolean;
 }
 
 export function TaskItem({
@@ -29,9 +30,15 @@ export function TaskItem({
   onDeleteTask,
   onSetSchedule,
   onToggleCompleted,
+  showPriority,
 }: TaskItemProps) {
   const { t, i18n } = useTranslation();
   const isCompleted = task.completedAt !== null;
+  const hasPriorityBadge = showPriority && task.priority !== 'none';
+  const priorityDescriptionId = useId();
+  const priorityDescription = !showPriority && task.priority !== 'none'
+    ? t('tasks.priority.description', { priority: t(`tasks.priority.${task.priority}`) })
+    : undefined;
   const hasMenuActions = Boolean(onSetSchedule ?? onDeleteTask);
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const rowRef = useRef<HTMLLIElement>(null);
@@ -59,10 +66,16 @@ export function TaskItem({
         role="checkbox"
         aria-checked={isCompleted}
         aria-label={t('tasks.list.completionLabel', { title: task.title })}
+        aria-describedby={priorityDescription ? priorityDescriptionId : undefined}
+        title={priorityDescription}
         disabled={isUpdating}
         onClick={() => onToggleCompleted(task)}
+        data-priority={!showPriority && task.priority !== 'none' ? task.priority : undefined}
       >
         {isCompleted ? <CheckIcon /> : null}
+        {priorityDescription
+          ? <span className={styles.visuallyHidden} id={priorityDescriptionId}>{priorityDescription}</span>
+          : null}
       </button>
 
       <div className={styles.taskMain}>
@@ -71,10 +84,10 @@ export function TaskItem({
         </span>
       </div>
 
-      {(task.priority !== 'none' || scheduleLabel)
+      {(hasPriorityBadge || scheduleLabel)
         ? (
             <div className={styles.taskMeta}>
-              {task.priority !== 'none'
+              {hasPriorityBadge
                 ? (
                     <span className={`${styles.priority} ${styles[task.priority]}`}>
                       {t(`tasks.priority.${task.priority}`)}

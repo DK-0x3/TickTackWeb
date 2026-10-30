@@ -7,6 +7,7 @@ import { CalendarIcon, CheckIcon, XIcon } from '@/shared/ui/icon';
 import styles from './CreateTaskForm.module.scss';
 
 interface CreateTaskFormProps {
+  isVisible?: boolean;
   errorMessage?: string | null;
   isSubmitting?: boolean;
   onCancel: () => void;
@@ -14,6 +15,7 @@ interface CreateTaskFormProps {
 }
 
 export function CreateTaskForm({
+  isVisible = true,
   errorMessage,
   isSubmitting = false,
   onCancel,
@@ -103,7 +105,7 @@ export function CreateTaskForm({
       </div>
 
       <TaskSchedulePicker
-        open={isScheduleOpen}
+        open={isVisible && isScheduleOpen}
         value={{ dueDate: dueDate || null, dueTime: dueTime || null }}
         disabled={isSubmitting}
         onOpenChange={setIsScheduleOpen}

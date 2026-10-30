@@ -78,8 +78,8 @@ describe('TaskListWidget', () => {
     const onToggleCompleted = vi.fn();
     render(<TaskListWidget {...baseProps} completedCount={7} totalCount={42} onToggleCompleted={onToggleCompleted} />);
 
-    expect(screen.getByText('7 of 42 tasks completed')).toBeTruthy();
-    expect(screen.getByLabelText('Total tasks: 42').textContent).toBe('42');
+    expect(screen.getByRole('progressbar', { name: 'Completion progress of all tasks' }).getAttribute('aria-valuenow')).toBe('17');
+    expect(screen.getByLabelText('Visible tasks: 42').textContent).toBe('42');
     await user.click(screen.getByRole('checkbox', { name: 'Change status of task “Review pagination”' }));
     expect(onToggleCompleted).toHaveBeenCalledWith(task);
   });

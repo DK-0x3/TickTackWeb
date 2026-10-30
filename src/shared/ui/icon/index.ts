@@ -4,6 +4,8 @@ export { AlertCircleIcon } from './icons/AlertCircleIcon';
 export { RefreshIcon } from './icons/RefreshIcon';
 export { CalendarIcon } from './icons/CalendarIcon';
 export { CheckIcon } from './icons/CheckIcon';
+export { ChevronDownIcon } from './icons/ChevronDownIcon';
+export { ChevronUpIcon } from './icons/ChevronUpIcon';
 export { CommandIcon } from './icons/CommandIcon';
 export { EllipsisIcon } from './icons/EllipsisIcon';
 export { FlagIcon } from './icons/FlagIcon';

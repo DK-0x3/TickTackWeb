@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { CreateTaskInput, Task, TaskScheduleInput } from '@/entities/task';
@@ -17,6 +17,11 @@ import styles from './TaskListWidget.module.scss';
 export type TaskListStatus = 'error' | 'loading' | 'success';
 
 interface TaskListWidgetProps {
+  isCollapsed?: boolean;
+  isCollapseSaving?: boolean;
+  collapseErrorMessage?: string | null;
+  onCollapsedChange?: (value: boolean) => void;
+  onRetryCollapse?: () => void;
   actionErrorMessage?: string | null;
   completedCount: number;
   createErrorMessage?: string | null;
@@ -29,6 +34,7 @@ interface TaskListWidgetProps {
   loadMoreErrorMessage?: string | null;
   status: TaskListStatus;
   showProgress?: boolean;
+  showPriority?: boolean;
   tasks: readonly Task[];
   title: string;
   totalCount: number;
@@ -49,6 +55,11 @@ interface TaskListWidgetProps {
 const emptyTaskIds = new Set<string>();
 
 export function TaskListWidget({
+  isCollapsed = false,
+  isCollapseSaving = false,
+  collapseErrorMessage,
+  onCollapsedChange,
+  onRetryCollapse,
   actionErrorMessage,
   completedCount,
   createErrorMessage,
@@ -61,6 +72,7 @@ export function TaskListWidget({
   loadMoreErrorMessage,
   status,
   showProgress = true,
+  showPriority = true,
   tasks,
   title,
   totalCount,
@@ -78,10 +90,12 @@ export function TaskListWidget({
   onToggleCompleted,
 }: TaskListWidgetProps) {
   const { t } = useTranslation();
+  const contentId = useId();
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const isEmpty = status === 'success' && tasks.length === 0 && !hasMore && totalCount === 0;
   const loadMoreTarget = useRef<HTMLDivElement>(null);
   const handleOpenCreateForm = () => {
+    if (isCollapsed) onCollapsedChange?.(false);
     onResetCreateError?.();
     setIsCreateFormOpen(true);
   };
@@ -92,7 +106,7 @@ export function TaskListWidget({
   };
 
   useEffect(() => {
-    if (status !== 'success' || !hasMore || isLoadingMore || loadMoreErrorMessage) {
+    if (isCollapsed || status !== 'success' || !hasMore || isLoadingMore || loadMoreErrorMessage) {
       return;
     }
 
@@ -101,19 +115,27 @@ export function TaskListWidget({
       return;
     }
 
+    let active = true;
     const observer = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) {
+      if (active && entries.some((entry) => entry.isIntersecting)) {
         onLoadMore();
       }
     }, { rootMargin: '0px 0px 320px 0px' });
 
     observer.observe(target);
-    return () => observer.disconnect();
-  }, [hasMore, isLoadingMore, loadMoreErrorMessage, onLoadMore, status]);
+    return () => {
+      active = false;
+      observer.disconnect();
+    };
+  }, [isCollapsed, hasMore, isLoadingMore, loadMoreErrorMessage, onLoadMore, status]);
 
   return (
-    <section className={styles.widget} data-header-only={isEmpty && !isCreateFormOpen && !actionErrorMessage}>
+    <section className={styles.widget} data-header-only={!collapseErrorMessage && (isCollapsed || (isEmpty && !isCreateFormOpen && !actionErrorMessage))}>
       <TaskListHeader
+        contentId={contentId}
+        isCollapsed={isCollapsed}
+        isCollapseSaving={isCollapseSaving}
+        {...(onCollapsedChange ? { onCollapsedChange } : {})}
         completedCount={completedCount}
         headerIcon={headerIcon}
         settingsAction={settingsAction}
@@ -127,78 +149,93 @@ export function TaskListWidget({
         {...(onOpenSettings ? { onOpenSettings } : {})}
       />
 
-      {isCreateFormOpen && onCreateTask
+      {collapseErrorMessage
         ? (
-            <CreateTaskForm
-              errorMessage={createErrorMessage ?? null}
-              isSubmitting={isCreating}
-              onCancel={handleCloseCreateForm}
-              onSubmit={onCreateTask}
-            />
+            <div className={styles.collapseError} role="alert">
+              <p>{collapseErrorMessage}</p>
+              {onRetryCollapse
+                ? <button className={styles.retryButton} type="button" disabled={isCollapseSaving} onClick={onRetryCollapse}>{t(isCollapseSaving ? 'tasks.list.retrying' : 'tasks.list.retryCollapse')}</button>
+                : null}
+            </div>
           )
         : null}
 
-      {(!isEmpty || actionErrorMessage) && (
-        <div className={styles.content} data-empty={isEmpty} aria-live="polite">
-          {actionErrorMessage
-            ? (
-                <TaskActionError
-                  message={actionErrorMessage}
-                  {...(onDismissActionError
-                    ? { onDismiss: onDismissActionError }
-                    : {})}
-                />
-              )
-            : null}
-          {status === 'loading' ? <TaskListSkeleton /> : null}
-          {status === 'error'
-            ? (
-                <TaskListError
-                  message={loadErrorMessage ?? null}
-                  onRetry={onRetry}
-                />
-              )
-            : null}
-          {status === 'success' && tasks.length === 0 && !hasMore
-            ? <TaskListEmpty completedHidden={visibleCount === 0 && totalCount > 0 && completedCount === totalCount} />
-            : null}
-          {status === 'success' && tasks.length > 0
-            ? (
-                <TaskList
-                  tasks={tasks}
-                  {...(serverToday ? { serverToday } : {})}
-                  updatingTaskIds={updatingTaskIds}
-                  onToggleCompleted={onToggleCompleted}
-                  {...(onDeleteTask ? { onDeleteTask } : {})}
-                  {...(onSetSchedule ? { onSetSchedule } : {})}
-                />
-              )
-            : null}
-          {status === 'success' && hasMore
-            ? (
-                <div className={styles.paginationState} ref={loadMoreTarget}>
-                  {isLoadingMore
-                    ? <span role="status">{t('tasks.list.loadingMore')}</span>
-                    : null}
-                  {loadMoreErrorMessage
-                    ? (
-                        <div role="alert">
-                          <p>{loadMoreErrorMessage}</p>
-                          <button
-                            className={styles.retryButton}
-                            type="button"
-                            onClick={onLoadMore}
-                          >
-                            {t('tasks.list.retry')}
-                          </button>
-                        </div>
-                      )
-                    : null}
-                </div>
-              )
-            : null}
-        </div>
-      )}
+      <div id={contentId} className={styles.body} hidden={isCollapsed}>
+        {isCreateFormOpen && onCreateTask
+          ? (
+              <CreateTaskForm
+                isVisible={!isCollapsed}
+                errorMessage={createErrorMessage ?? null}
+                isSubmitting={isCreating}
+                onCancel={handleCloseCreateForm}
+                onSubmit={onCreateTask}
+              />
+            )
+          : null}
+
+        {(!isEmpty || actionErrorMessage) && (
+          <div className={styles.content} data-empty={isEmpty} aria-live="polite">
+            {actionErrorMessage
+              ? (
+                  <TaskActionError
+                    message={actionErrorMessage}
+                    {...(onDismissActionError
+                      ? { onDismiss: onDismissActionError }
+                      : {})}
+                  />
+                )
+              : null}
+            {status === 'loading' ? <TaskListSkeleton /> : null}
+            {status === 'error'
+              ? (
+                  <TaskListError
+                    message={loadErrorMessage ?? null}
+                    onRetry={onRetry}
+                  />
+                )
+              : null}
+            {status === 'success' && tasks.length === 0 && !hasMore
+              ? <TaskListEmpty completedHidden={visibleCount === 0 && totalCount > 0 && completedCount === totalCount} />
+              : null}
+            {!isCollapsed && status === 'success' && tasks.length > 0
+              ? (
+                  <TaskList
+                    tasks={tasks}
+                    {...(serverToday ? { serverToday } : {})}
+                    updatingTaskIds={updatingTaskIds}
+                    onToggleCompleted={onToggleCompleted}
+                    showPriority={showPriority}
+                    {...(onDeleteTask ? { onDeleteTask } : {})}
+                    {...(onSetSchedule ? { onSetSchedule } : {})}
+                  />
+                )
+              : null}
+            {status === 'success' && hasMore
+              ? (
+                  <div className={styles.paginationState} ref={loadMoreTarget}>
+                    {isLoadingMore
+                      ? <span role="status">{t('tasks.list.loadingMore')}</span>
+                      : null}
+                    {loadMoreErrorMessage
+                      ? (
+                          <div role="alert">
+                            <p>{loadMoreErrorMessage}</p>
+                            <button
+                              className={styles.retryButton}
+                              type="button"
+                              onClick={onLoadMore}
+                            >
+                              {t('tasks.list.retry')}
+                            </button>
+                          </div>
+                        )
+                      : null}
+                  </div>
+                )
+              : null}
+          </div>
+        )}
+      </div>
     </section>
   );
 }

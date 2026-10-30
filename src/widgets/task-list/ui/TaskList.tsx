@@ -11,6 +11,7 @@ interface TaskListProps {
   updatingTaskIds: ReadonlySet<string>;
   onDeleteTask?: (task: Task) => void;
   onSetSchedule?: (task: Task, schedule: TaskScheduleInput) => Promise<boolean>;
+  showPriority?: boolean;
   onToggleCompleted: (task: Task) => void;
 }
 
@@ -20,6 +21,7 @@ export function TaskList({
   updatingTaskIds,
   onDeleteTask,
   onSetSchedule,
+  showPriority = true,
   onToggleCompleted,
 }: TaskListProps) {
   const [today, setToday] = useState(() => new Date());
@@ -52,6 +54,7 @@ export function TaskList({
           today={displayToday}
           isUpdating={updatingTaskIds.has(task.id)}
           onToggleCompleted={onToggleCompleted}
+          showPriority={showPriority}
           {...(onDeleteTask ? { onDeleteTask } : {})}
           {...(onSetSchedule ? { onSetSchedule } : {})}
         />

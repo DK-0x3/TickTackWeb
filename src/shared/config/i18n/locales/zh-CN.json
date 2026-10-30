@@ -63,6 +63,8 @@
       "sortDirection": "排序方向",
       "showCompleted": "保留已完成的任务",
       "showCompletedDescription": "关闭后，任务会立即显示在“已完成”中，完成进度保持不变。",
+      "showPriority": "显示优先级标签",
+      "showPriorityDescription": "关闭后，将通过复选框的颜色而非标签表示优先级。",
       "enabled": "已开启",
       "disabled": "已关闭",
       "fields": {
@@ -81,7 +83,7 @@
       "saving": "保存中…",
       "saveError": "无法保存设置。",
       "conflict": "设置已更改。请检查所选值后再次保存。",
-      "unconfirmed": "保存结果尚未确认。请刷新设置后重试。",
+      "unconfirmed": "无法确认是否已保存。已保留您的选择，请尝试再次保存。",
       "conflictDialog": {
         "title": "设置已更改",
         "description": "服务器上保存了不同的任务显示设置。请选择要使用的值。",
@@ -95,6 +97,11 @@
       }
     },
     "list": {
+      "collapse": "收起“{{title}}”分区",
+      "expand": "展开“{{title}}”分区",
+      "collapseSaveError": "无法保存分区显示状态，已恢复原来的状态。",
+      "collapseUnconfirmed": "无法确认分区显示状态是否已保存。您可以重试保存。",
+      "retryCollapse": "重试保存",
       "add": "添加任务",
       "settings": "列表设置",
       "completed": "已完成 {{completed}} / {{total}} 项任务",
@@ -105,8 +112,8 @@
       "progressLabel": "所有任务的完成进度",
       "completionLabel": "更改任务“{{title}}”的状态",
       "taskActions": "任务“{{title}}”的操作",
-      "emptyTitle": "收件箱中还没有任务",
-      "emptyDescription": "添加第一个任务，开始规划。",
+      "emptyTitle": "此分区暂无任务",
+      "emptyDescription": "符合此分区条件的任务会显示在这里。",
       "errorTitle": "无法加载任务",
       "errorDescription": "请检查连接，然后重试。",
       "loadingMore": "正在加载任务...",
@@ -140,6 +147,7 @@
       "clear": "移除日期"
     },
     "priority": {
+      "description": "优先级：{{priority}}",
       "low": "低",
       "medium": "中",
       "high": "高"

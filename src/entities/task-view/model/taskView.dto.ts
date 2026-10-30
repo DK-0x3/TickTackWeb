@@ -13,6 +13,8 @@ export interface TaskViewDto {
   sort_field: TaskViewSortField;
   sort_direction: TaskViewSortDirection;
   show_completed: boolean;
+  show_priority: boolean;
+  is_collapsed: boolean;
   version: number;
 }
 
